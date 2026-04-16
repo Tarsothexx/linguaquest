@@ -59,13 +59,13 @@ service cloud.firestore {
     
     // Coleta "users" - Profile do usuário
     match /users/{userId} {
-      allow read: if isAuthenticated() && 
+      allow read: if isAuthenticated() &&
                      (isDocumentOwner(userId) || request.auth.token.admin == true);
-      allow create: if isAuthenticated() && 
-                       isDocumentOwner(userId) && 
+      allow create: if isAuthenticated() &&
+                       request.auth.uid == userId &&
                        isValidUserData();
-      allow update: if isAuthenticated() && 
-                       isDocumentOwner(userId) && 
+      allow update: if isAuthenticated() &&
+                       isDocumentOwner(userId) &&
                        isValidUserData();
       allow delete: if isAuthenticated() && isDocumentOwner(userId);
     }
