@@ -9,6 +9,9 @@ const App = () => {
   const [loginData, setLoginData] = useState({ email: '', password: '' });
   const [registerData, setRegisterData] = useState({ name: '', email: '', password: '', confirmPassword: '' });
   const [passwordMatchError, setPasswordMatchError] = useState(false);
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [registerLoading, setRegisterLoading] = useState(false);
+  const [authError, setAuthError] = useState('');
   
   const [selectedLanguage, setSelectedLanguage] = useState('japanese');
   const [currentScreen, setCurrentScreen] = useState('map'); // map, unit, lesson, complete, minigame, resources, dictionary
@@ -349,6 +352,61 @@ const App = () => {
       { type: 'vocab', question: 'O que significa かき?', word: 'かき', romaji: 'kaki', options: ['Ostra', 'Caqui', 'Casa', 'Escrever'], correct: 1, explanation: 'かき (kaki) significa "caqui" (a fruta)' },
       { type: 'vocab', question: 'Traduza: ここ', word: 'ここ', romaji: 'koko', options: ['Ali', 'Lá', 'Aqui', 'Onde'], correct: 2, explanation: 'ここ (koko) significa "aqui"' }
     ],
+    
+    // Hiragana - Série S
+    h3: [
+      { type: 'recognize', question: 'Qual é a pronúncia deste caractere?', char: 'さ', options: ['sa', 'shi', 'su', 'se'], correct: 0, explanation: 'さ se pronuncia "sa"' },
+      { type: 'recognize', question: 'Identifique "shi"', char: 'し', options: ['sa', 'shi', 'su', 'se'], correct: 1, explanation: 'し se pronuncia "shi"' },
+      { type: 'recognize', question: 'Este caractere é?', char: 'す', options: ['su', 'se', 'so', 'sa'], correct: 0, explanation: 'す se pronuncia "su"' },
+      { type: 'recognize', question: 'Encontre "se"', char: 'せ', options: ['sa', 'shi', 'su', 'se'], correct: 3, explanation: 'せ se pronuncia "se"' },
+      { type: 'recognize', question: 'Selecione "so"', char: 'そ', options: ['so', 'sa', 'shi', 'su'], correct: 0, explanation: 'そ se pronuncia "so"' },
+      { type: 'vocab', question: 'O que significa すし?', word: 'すし', romaji: 'sushi', options: ['Sushi', 'Sopa', 'Salada', 'Sorvete'], correct: 0, explanation: 'すし (sushi) é o famoso prato japonês' },
+      { type: 'vocab', question: 'Traduza: せんせい', word: 'せんせい', romaji: 'sensei', options: ['Professor', 'Estudante', 'Diretor', 'Pai'], correct: 0, explanation: 'せんせい (sensei) significa "professor" ou "mestre"' }
+    ],
+    
+    // Hiragana - Série T
+    h4: [
+      { type: 'recognize', question: 'Qual é a pronúncia deste caractere?', char: 'た', options: ['ta', 'chi', 'tsu', 'te'], correct: 0, explanation: 'た se pronuncia "ta"' },
+      { type: 'recognize', question: 'Identifique "chi"', char: 'ち', options: ['ta', 'chi', 'tsu', 'te'], correct: 1, explanation: 'ち se pronuncia "chi"' },
+      { type: 'recognize', question: 'Este caractere é?', char: 'つ', options: ['tsu', 'te', 'to', 'ta'], correct: 0, explanation: 'つ se pronuncia "tsu"' },
+      { type: 'recognize', question: 'Encontre "te"', char: 'て', options: ['ta', 'chi', 'tsu', 'te'], correct: 3, explanation: 'て se pronuncia "te"' },
+      { type: 'recognize', question: 'Selecione "to"', char: 'と', options: ['to', 'ta', 'chi', 'tsu'], correct: 0, explanation: 'と se pronuncia "to"' },
+      { type: 'vocab', question: 'O que significa ちず?', word: 'ちず', romaji: 'chizu', options: ['Mapa', 'Livro', 'Carro', 'Casa'], correct: 0, explanation: 'ちず (chizu) significa "mapa"' },
+      { type: 'vocab', question: 'Traduza: ともだち', word: 'ともだち', romaji: 'tomodachi', options: ['Amigo', 'Professor', 'Família', 'Animal'], correct: 0, explanation: 'ともだち (tomodachi) significa "amigo"' }
+    ],
+    
+    // Hiragana - Série N
+    h5: [
+      { type: 'recognize', question: 'Qual é a pronúncia deste caractere?', char: 'な', options: ['na', 'ni', 'nu', 'ne'], correct: 0, explanation: 'な se pronuncia "na"' },
+      { type: 'recognize', question: 'Identifique "ni"', char: 'に', options: ['na', 'ni', 'nu', 'ne'], correct: 1, explanation: 'に se pronuncia "ni"' },
+      { type: 'recognize', question: 'Este caractere é?', char: 'ぬ', options: ['nu', 'ne', 'no', 'na'], correct: 0, explanation: 'ぬ se pronuncia "nu"' },
+      { type: 'recognize', question: 'Encontre "ne"', char: 'ね', options: ['na', 'ni', 'nu', 'ne'], correct: 3, explanation: 'ね se pronuncia "ne"' },
+      { type: 'recognize', question: 'Selecione "no"', char: 'の', options: ['no', 'na', 'ni', 'nu'], correct: 0, explanation: 'の se pronuncia "no"' },
+      { type: 'vocab', question: 'O que significa なまえ?', word: 'なまえ', romaji: 'namae', options: ['Nome', 'Número', 'Nó', 'Nuvem'], correct: 0, explanation: 'なまえ (namae) significa "nome"' },
+      { type: 'vocab', question: 'Traduza: ねこ', word: 'ねこ', romaji: 'neko', options: ['Gato', 'Cachorro', 'Pássaro', 'Peixe'], correct: 0, explanation: 'ねこ (neko) significa "gato"' }
+    ],
+    
+    // Hiragana - Série H
+    h6: [
+      { type: 'recognize', question: 'Qual é a pronúncia deste caractere?', char: 'は', options: ['ha', 'hi', 'fu', 'he'], correct: 0, explanation: 'は se pronuncia "ha"' },
+      { type: 'recognize', question: 'Identifique "hi"', char: 'ひ', options: ['ha', 'hi', 'fu', 'he'], correct: 1, explanation: 'ひ se pronuncia "hi"' },
+      { type: 'recognize', question: 'Este caractere é?', char: 'ふ', options: ['fu', 'he', 'ho', 'ha'], correct: 0, explanation: 'ふ se pronuncia "fu"' },
+      { type: 'recognize', question: 'Encontre "he"', char: 'へ', options: ['ha', 'hi', 'fu', 'he'], correct: 3, explanation: 'へ se pronuncia "he"' },
+      { type: 'recognize', question: 'Selecione "ho"', char: 'ほ', options: ['ho', 'ha', 'hi', 'fu'], correct: 0, explanation: 'ほ se pronuncia "ho"' },
+      { type: 'vocab', question: 'O que significa はな?', word: 'はな', romaji: 'hana', options: ['Flor', 'Nariz', 'Folha', 'Sol'], correct: 0, explanation: 'はな (hana) significa "flor"' },
+      { type: 'vocab', question: 'Traduza: ひと', word: 'ひと', romaji: 'hito', options: ['Pessoa', 'Dia', 'Ano', 'Mês'], correct: 0, explanation: 'ひと (hito) significa "pessoa"' }
+    ],
+    
+    // Hiragana - Série M
+    h7: [
+      { type: 'recognize', question: 'Qual é a pronúncia deste caractere?', char: 'ま', options: ['ma', 'mi', 'mu', 'me'], correct: 0, explanation: 'ま se pronuncia "ma"' },
+      { type: 'recognize', question: 'Identifique "mi"', char: 'み', options: ['ma', 'mi', 'mu', 'me'], correct: 1, explanation: 'み se pronuncia "mi"' },
+      { type: 'recognize', question: 'Este caractere é?', char: 'む', options: ['mu', 'me', 'mo', 'ma'], correct: 0, explanation: 'む se pronuncia "mu"' },
+      { type: 'recognize', question: 'Encontre "me"', char: 'め', options: ['ma', 'mi', 'mu', 'me'], correct: 3, explanation: 'め se pronuncia "me"' },
+      { type: 'recognize', question: 'Selecione "mo"', char: 'も', options: ['mo', 'ma', 'mi', 'mu'], correct: 0, explanation: 'も se pronuncia "mo"' },
+      { type: 'vocab', question: 'O que significa みず?', word: 'みず', romaji: 'mizu', options: ['Água', 'Fogo', 'Terra', 'Ar'], correct: 0, explanation: 'みず (mizu) significa "água"' },
+      { type: 'vocab', question: 'Traduza: めがね', word: 'めがね', romaji: 'megane', options: ['Óculos', 'Livro', 'Caneta', 'Papel'], correct: 0, explanation: 'めがね (megane) significa "óculos"' }
+    ],
 
     // Saudações
     s1: [
@@ -369,6 +427,16 @@ const App = () => {
       { type: 'context', question: 'Alguém te ajudou. Você diz:', word: 'ありがとう', options: ['すみません', 'ありがとう', 'ごめんなさい', 'おねがいします'], correct: 1, explanation: 'Agradeça com ありがとう quando alguém te ajudar' }
     ],
 
+    // Apresentações
+    s3: [
+      { type: 'vocab', question: 'Como se diz "Meu nome é"?', word: 'わたしのなまえは', romaji: 'Watashi no namae wa', options: ['わたしのなまえは', 'あなたは', 'かれは', 'かのじょは'], correct: 0, explanation: 'わたしのなまえは (watashi no namae wa) significa "meu nome é"' },
+      { type: 'vocab', question: 'Qual é "sou brasileiro"?', word: 'ブラジルじんです', romaji: 'Burajiru jin desu', options: ['ブラジルじんです', 'アメリカじんです', 'にほんじんです', 'イギリスじんです'], correct: 0, explanation: 'ブラジルじんです significa "sou brasileiro"' },
+      { type: 'vocab', question: '"Prazer em conhecê-lo"', word: 'はじめまして', romaji: 'Hajimemashite', options: ['はじめまして', 'よろしくおねがいします', 'どうぞよろしく', 'おめでとう'], correct: 0, explanation: 'はじめまして é usado quando se conhece alguém pela primeira vez' },
+      { type: 'vocab', question: '"Muito prazer"', word: 'よろしくおねがいします', romaji: 'Yoroshiku onegaishimasu', options: ['はじめまして', 'よろしくおねがいします', 'どうぞよろしく', 'おめでとう'], correct: 1, explanation: 'よろしくおねがいします é uma expressão de cortesia ao se apresentar' },
+      { type: 'context', question: 'Ao conhecer alguém, primeiro você diz:', word: 'はじめまして', options: ['はじめまして', 'こんにちは', 'さようなら', 'ありがとう'], correct: 0, explanation: 'Comece sempre com はじめまして quando conhecer alguém' },
+      { type: 'context', question: 'Depois de dizer seu nome, você diz:', word: 'よろしくおねがいします', options: ['こんにちは', 'よろしくおねがいします', 'さようなら', 'ありがとう'], correct: 1, explanation: 'Complete a apresentação com よろしくおねがいします' }
+    ],
+
     // Números 1-10
     n1: [
       { type: 'number', question: 'Como se diz "1"?', char: '一', romaji: 'ichi', options: ['いち', 'に', 'さん', 'し'], correct: 0, explanation: '1 = いち (ichi)' },
@@ -380,19 +448,154 @@ const App = () => {
       { type: 'math', question: '3 + 2 = ?', options: ['よん', 'ご', 'ろく', 'なな'], correct: 1, explanation: '3 (さん) + 2 (に) = 5 (ご)' }
     ],
 
-    // Partículas - Exemplos com tooltips
-    p1: [
-      { type: 'particle', question: 'Complete: わたし___ がくせいです (Eu sou estudante)', word: 'は', options: ['は', 'が', 'を', 'に'], correct: 0, explanation: 'は marca o tópico da frase' },
-      { type: 'particle', question: 'Complete: これ___ ほんです (Este é um livro)', word: 'は', options: ['を', 'は', 'に', 'で'], correct: 1, explanation: 'は indica sobre o que estamos falando' },
-      { type: 'particle', question: 'Complete: ねこ___ います (Tem um gato)', word: 'が', options: ['は', 'を', 'が', 'に'], correct: 2, explanation: 'が marca o sujeito com ênfase' },
-      { type: 'particle', question: 'Qual partícula marca o tópico?', word: 'は', options: ['を', 'が', 'は', 'に'], correct: 2, explanation: 'は (wa) é o marcador de tópico principal' }
+    // Números 11-100
+    n2: [
+      { type: 'number', question: 'Como se diz "11"?', char: '十一', romaji: 'juuichi', options: ['じゅういち', 'じゅうに', 'じゅうさん', 'じゅうよん'], correct: 0, explanation: '11 = じゅういち (juuichi)' },
+      { type: 'number', question: 'Como se diz "20"?', char: '二十', romaji: 'nijuu', options: ['じゅう', 'にじゅう', 'さんじゅう', 'よんじゅう'], correct: 1, explanation: '20 = にじゅう (nijuu)' },
+      { type: 'number', question: '"30" é:', char: '三十', romaji: 'sanjuu', options: ['にじゅう', 'さんじゅう', 'よんじゅう', 'ごじゅう'], correct: 1, explanation: '30 = さんじゅう (sanjuu)' },
+      { type: 'number', question: 'Número "50":', char: '五十', romaji: 'gojuu', options: ['よんじゅう', 'ごじゅう', 'ろくじゅう', 'ななじゅう'], correct: 1, explanation: '50 = ごじゅう (gojuu)' },
+      { type: 'number', question: '"100" em japonês:', char: '百', romaji: 'hyaku', options: ['きゅうじゅう', 'ひゃく', 'せん', 'まん'], correct: 1, explanation: '100 = ひゃく (hyaku)' },
+      { type: 'math', question: '20 + 30 = ?', options: ['ごじゅう', 'ろくじゅう', 'ななじゅう', 'はちじゅう'], correct: 0, explanation: '20 (にじゅう) + 30 (さんじゅう) = 50 (ごじゅう)' },
+      { type: 'math', question: '100 - 20 = ?', options: ['はちじゅう', 'きゅうじゅう', 'ひゃく', 'にじゅう'], correct: 0, explanation: '100 (ひゃく) - 20 (にじゅう) = 80 (はちじゅう)' }
+    ],
+
+    // Contadores Básicos
+    n3: [
+      { type: 'vocab', question: 'Contador geral de objetos:', word: '~つ', romaji: '~tsu', options: ['~つ', '~人', '~個', '~匹'], correct: 0, explanation: '~つ é usado para contar objetos pequenos e gerais' },
+      { type: 'vocab', question: 'Contador de pessoas:', word: '~人', romaji: '~nin', options: ['~つ', '~人', '~個', '~匹'], correct: 1, explanation: '~人 é usado para contar pessoas' },
+      { type: 'vocab', question: 'Contador de objetos redondos:', word: '~個', romaji: '~ko', options: ['~つ', '~人', '~個', '~匹'], correct: 2, explanation: '~個 é usado para objetos redondos ou frutas' },
+      { type: 'vocab', question: 'Contador de animais pequenos:', word: '~匹', romaji: '~hiki', options: ['~つ', '~人', '~個', '~匹'], correct: 3, explanation: '~匹 é usado para animais pequenos' },
+      { type: 'context', question: '2 maçãs =', word: 'りんごがにこ', options: ['りんごがふたつ', 'りんごがにこ', 'りんごがににん', 'りんごがにひき'], correct: 1, explanation: 'Maçãs usam ~個: りんごがにこ (ringo ga niko)' },
+      { type: 'context', question: '3 pessoas =', word: 'さんにん', options: ['さんつ', 'さんにん', 'さんこ', 'さんひき'], correct: 1, explanation: 'Pessoas usam ~人: さんにん (sannin)' },
+      { type: 'context', question: '1 cachorro =', word: 'いっぴき', options: ['ひとつ', 'ひとり', 'いっこ', 'いっぴき'], correct: 3, explanation: 'Cachorros usam ~匹: いっぴき (ippiki)' }
+    ],
+
+    // Katakana - Vogais
+    k1: [
+      { type: 'recognize', question: 'Qual é a pronúncia deste caractere?', char: 'ア', options: ['a', 'i', 'u', 'e'], correct: 0, explanation: 'ア se pronuncia "a" - primeira vogal do katakana' },
+      { type: 'recognize', question: 'Selecione o caractere "i"', char: 'イ', options: ['ア', 'イ', 'ウ', 'エ'], correct: 1, explanation: 'イ se pronuncia "i"' },
+      { type: 'recognize', question: 'Como se escreve "u"?', char: 'ウ', options: ['ア', 'イ', 'ウ', 'エ'], correct: 2, explanation: 'ウ se pronuncia "u"' },
+      { type: 'recognize', question: 'Identifique o caractere "e"', char: 'エ', options: ['ア', 'イ', 'ウ', 'エ'], correct: 3, explanation: 'エ se pronuncia "e"' },
+      { type: 'recognize', question: 'Qual destes é "o"?', char: 'オ', options: ['ア', 'オ', 'カ', 'サ'], correct: 1, explanation: 'オ se pronuncia "o" - completa as vogais katakana' },
+      { type: 'write', question: 'Complete: a-i-u-e-?', options: ['ア', 'イ', 'オ', 'カ'], correct: 2, explanation: 'A sequência completa é: ア(a) イ(i) ウ(u) エ(e) オ(o)' },
+      { type: 'vocab', question: 'O que significa アメリカ?', word: 'アメリカ', romaji: 'amerika', options: ['América', 'África', 'Ásia', 'Europa'], correct: 0, explanation: 'アメリカ (amerika) significa "América"' }
+    ],
+
+    // Katakana - Série K
+    k2: [
+      { type: 'recognize', question: 'Qual é "ka"?', char: 'カ', options: ['カ', 'キ', 'ク', 'ケ'], correct: 0, explanation: 'カ se pronuncia "ka"' },
+      { type: 'recognize', question: 'Identifique "ki"', char: 'キ', options: ['カ', 'キ', 'ク', 'ケ'], correct: 1, explanation: 'キ se pronuncia "ki"' },
+      { type: 'recognize', question: 'Este caractere é?', char: 'ク', options: ['ku', 'ke', 'ko', 'ka'], correct: 0, explanation: 'ク se pronuncia "ku"' },
+      { type: 'recognize', question: 'Encontre "ke"', char: 'ケ', options: ['カ', 'キ', 'ク', 'ケ'], correct: 3, explanation: 'ケ se pronuncia "ke"' },
+      { type: 'recognize', question: 'Selecione "ko"', char: 'コ', options: ['コ', 'カ', 'キ', 'ク'], correct: 0, explanation: 'コ se pronuncia "ko"' },
+      { type: 'vocab', question: 'O que significa コーヒー?', word: 'コーヒー', romaji: 'koohii', options: ['Café', 'Chá', 'Leite', 'Água'], correct: 0, explanation: 'コーヒー (koohii) significa "café"' },
+      { type: 'vocab', question: 'Traduza: ケーキ', word: 'ケーキ', romaji: 'keeki', options: ['Bolo', 'Pão', 'Biscoito', 'Sorvete'], correct: 0, explanation: 'ケーキ (keeki) significa "bolo"' }
+    ],
+
+    // Katakana - Série S
+    k3: [
+      { type: 'recognize', question: 'Qual é "sa"?', char: 'サ', options: ['サ', 'シ', 'ス', 'セ'], correct: 0, explanation: 'サ se pronuncia "sa"' },
+      { type: 'recognize', question: 'Identifique "shi"', char: 'シ', options: ['サ', 'シ', 'ス', 'セ'], correct: 1, explanation: 'シ se pronuncia "shi"' },
+      { type: 'recognize', question: 'Este caractere é?', char: 'ス', options: ['su', 'se', 'so', 'sa'], correct: 0, explanation: 'ス se pronuncia "su"' },
+      { type: 'recognize', question: 'Encontre "se"', char: 'セ', options: ['サ', 'シ', 'ス', 'セ'], correct: 3, explanation: 'セ se pronuncia "se"' },
+      { type: 'recognize', question: 'Selecione "so"', char: 'ソ', options: ['ソ', 'サ', 'シ', 'ス'], correct: 0, explanation: 'ソ se pronuncia "so"' },
+      { type: 'vocab', question: 'O que significa サッカー?', word: 'サッカー', romaji: 'sakkaa', options: ['Futebol', 'Basquete', 'Vôlei', 'Tênis'], correct: 0, explanation: 'サッカー (sakkaa) significa "futebol"' },
+      { type: 'vocab', question: 'Traduza: スーパー', word: 'スーパー', romaji: 'suupaa', options: ['Supermercado', 'Restaurante', 'Loja', 'Mercado'], correct: 0, explanation: 'スーパー (suupaa) significa "supermercado"' }
+    ],
+
+    // Katakana - Série T
+    k4: [
+      { type: 'recognize', question: 'Qual é "ta"?', char: 'タ', options: ['タ', 'チ', 'ツ', 'テ'], correct: 0, explanation: 'タ se pronuncia "ta"' },
+      { type: 'recognize', question: 'Identifique "chi"', char: 'チ', options: ['タ', 'チ', 'ツ', 'テ'], correct: 1, explanation: 'チ se pronuncia "chi"' },
+      { type: 'recognize', question: 'Este caractere é?', char: 'ツ', options: ['tsu', 'te', 'to', 'ta'], correct: 0, explanation: 'ツ se pronuncia "tsu"' },
+      { type: 'recognize', question: 'Encontre "te"', char: 'テ', options: ['タ', 'チ', 'ツ', 'テ'], correct: 3, explanation: 'テ se pronuncia "te"' },
+      { type: 'recognize', question: 'Selecione "to"', char: 'ト', options: ['ト', 'タ', 'チ', 'ツ'], correct: 0, explanation: 'ト se pronuncia "to"' },
+      { type: 'vocab', question: 'O que significa テレビ?', word: 'テレビ', romaji: 'terebi', options: ['Televisão', 'Rádio', 'Computador', 'Celular'], correct: 0, explanation: 'テレビ (terebi) significa "televisão"' },
+      { type: 'vocab', question: 'Traduza: トマト', word: 'トマト', romaji: 'tomato', options: ['Tomate', 'Batata', 'Cenoura', 'Cebola'], correct: 0, explanation: 'トマト (tomato) significa "tomate"' }
+    ],
+
+    // Vocabulário - Família
+    v1: [
+      { type: 'vocab', question: 'Como se diz "pai"?', word: 'ちち', romaji: 'chichi', options: ['ちち', 'はは', 'あに', 'あね'], correct: 0, explanation: 'ちち (chichi) significa "pai"' },
+      { type: 'vocab', question: 'Qual é "mãe"?', word: 'はは', romaji: 'haha', options: ['ちち', 'はは', 'あに', 'あね'], correct: 1, explanation: 'はは (haha) significa "mãe"' },
+      { type: 'vocab', question: '"Irmão mais velho" é:', word: 'あに', romaji: 'ani', options: ['ちち', 'はは', 'あに', 'あね'], correct: 2, explanation: 'あに (ani) significa "irmão mais velho"' },
+      { type: 'vocab', question: 'Como se diz "irmã mais velha"?', word: 'あね', romaji: 'ane', options: ['ちち', 'はは', 'あに', 'あね'], correct: 3, explanation: 'あね (ane) significa "irmã mais velha"' },
+      { type: 'vocab', question: '"Irmão mais novo" em japonês:', word: 'おとうと', romaji: 'otouto', options: ['おとうと', 'いもうと', 'おじいさん', 'おばあさん'], correct: 0, explanation: 'おとうと (otouto) significa "irmão mais novo"' },
+      { type: 'vocab', question: 'Qual é "irmã mais nova"?', word: 'いもうと', romaji: 'imouto', options: ['おとうと', 'いもうと', 'おじいさん', 'おばあさん'], correct: 1, explanation: 'いもうと (imouto) significa "irmã mais nova"' },
+      { type: 'context', question: 'Complete: わたしの___ は エンジニアです (Meu pai é engenheiro)', word: 'ちち', options: ['ちち', 'はは', 'あに', 'あね'], correct: 0, explanation: 'Use ちち para se referir ao pai' }
+    ],
+
+    // Vocabulário - Comida
+    v2: [
+      { type: 'vocab', question: 'Como se diz "arroz"?', word: 'ごはん', romaji: 'gohan', options: ['ごはん', 'パン', '肉', '魚'], correct: 0, explanation: 'ごはん (gohan) significa "arroz" ou "comida"' },
+      { type: 'vocab', question: 'Qual é "pão"?', word: 'パン', romaji: 'pan', options: ['ごはん', 'パン', '肉', '魚'], correct: 1, explanation: 'パン (pan) significa "pão"' },
+      { type: 'vocab', question: '"Carne" é:', word: '肉', romaji: 'niku', options: ['ごはん', 'パン', '肉', '魚'], correct: 2, explanation: '肉 (niku) significa "carne"' },
+      { type: 'vocab', question: 'Como se diz "peixe"?', word: '魚', romaji: 'sakana', options: ['ごはん', 'パン', '肉', '魚'], correct: 3, explanation: '魚 (sakana) significa "peixe"' },
+      { type: 'vocab', question: '"Água" em japonês:', word: '水', romaji: 'mizu', options: ['水', 'お茶', 'コーヒー', 'ジュース'], correct: 0, explanation: '水 (mizu) significa "água"' },
+      { type: 'vocab', question: 'Qual é "chá"?', word: 'お茶', romaji: 'ocha', options: ['水', 'お茶', 'コーヒー', 'ジュース'], correct: 1, explanation: 'お茶 (ocha) significa "chá"' },
+      { type: 'context', question: 'Complete: ___ を たべます (Como arroz)', word: 'ごはん', options: ['ごはん', 'パン', '肉', '魚'], correct: 0, explanation: 'Use ごはん para se referir ao arroz' }
+    ],
+
+    // Vocabulário - Lugares
+    v3: [
+      { type: 'vocab', question: 'Como se diz "casa"?', word: 'いえ', romaji: 'ie', options: ['いえ', 'がっこう', 'びょういん', 'みせ'], correct: 0, explanation: 'いえ (ie) significa "casa"' },
+      { type: 'vocab', question: 'Qual é "escola"?', word: 'がっこう', romaji: 'gakkou', options: ['いえ', 'がっこう', 'びょういん', 'みせ'], correct: 1, explanation: 'がっこう (gakkou) significa "escola"' },
+      { type: 'vocab', question: '"Hospital" é:', word: 'びょういん', romaji: 'byouin', options: ['いえ', 'がっこう', 'びょういん', 'みせ'], correct: 2, explanation: 'びょういん (byouin) significa "hospital"' },
+      { type: 'vocab', question: 'Como se diz "loja"?', word: 'みせ', romaji: 'mise', options: ['いえ', 'がっこう', 'びょういん', 'みせ'], correct: 3, explanation: 'みせ (mise) significa "loja"' },
+      { type: 'vocab', question: '"Restaurante" em japonês:', word: 'レストラン', romaji: 'resutoran', options: ['レストラン', 'ホテル', 'こうえん', 'えき'], correct: 0, explanation: 'レストラン (resutoran) significa "restaurante"' },
+      { type: 'vocab', question: 'Qual é "estação de trem"?', word: 'えき', romaji: 'eki', options: ['レストラン', 'ホテル', 'こうえん', 'えき'], correct: 3, explanation: 'えき (eki) significa "estação de trem"' },
+      { type: 'context', question: 'Complete: ___ に いきます (Vou para a escola)', word: 'がっこう', options: ['いえ', 'がっこう', 'びょういん', 'みせ'], correct: 1, explanation: 'Use がっこう para se referir à escola' }
+    ],
+
+    // Vocabulário - Tempo
+    v4: [
+      { type: 'vocab', question: 'Como se diz "hoje"?', word: 'きょう', romaji: 'kyou', options: ['きょう', 'あした', 'きのう', 'いま'], correct: 0, explanation: 'きょう (kyou) significa "hoje"' },
+      { type: 'vocab', question: 'Qual é "amanhã"?', word: 'あした', romaji: 'ashita', options: ['きょう', 'あした', 'きのう', 'いま'], correct: 1, explanation: 'あした (ashita) significa "amanhã"' },
+      { type: 'vocab', question: '"Ontem" é:', word: 'きのう', romaji: 'kinou', options: ['きょう', 'あした', 'きのう', 'いま'], correct: 2, explanation: 'きのう (kinou) significa "ontem"' },
+      { type: 'vocab', question: 'Como se diz "agora"?', word: 'いま', romaji: 'ima', options: ['きょう', 'あした', 'きのう', 'いま'], correct: 3, explanation: 'いま (ima) significa "agora"' },
+      { type: 'vocab', question: '"Manhã" em japonês:', word: 'あさ', romaji: 'asa', options: ['あさ', 'ひる', 'ばん', 'よる'], correct: 0, explanation: 'あさ (asa) significa "manhã"' },
+      { type: 'vocab', question: 'Qual é "noite"?', word: 'よる', romaji: 'yoru', options: ['あさ', 'ひる', 'ばん', 'よる'], correct: 3, explanation: 'よる (yoru) significa "noite"' },
+      { type: 'vocab', question: '"Tempo" (clima) é:', word: 'てんき', romaji: 'tenki', options: ['じかん', 'てんき', 'とき', 'はれ'], correct: 1, explanation: 'てんき (tenki) significa "tempo" ou "clima"' }
     ],
 
     p2: [
       { type: 'particle', question: 'Complete: りんご___ たべます (Como maçã)', word: 'を', options: ['は', 'を', 'が', 'に'], correct: 1, explanation: 'を marca o objeto direto' },
       { type: 'particle', question: 'Complete: ほん___ よみます (Leio livro)', word: 'を', options: ['を', 'は', 'に', 'で'], correct: 0, explanation: 'を indica o que está sendo lido' },
       { type: 'particle', question: 'Qual partícula marca objeto direto?', word: 'を', options: ['は', 'が', 'を', 'に'], correct: 2, explanation: 'を (wo/o) marca o objeto da ação' }
-    ]
+    ],
+
+    // Partículas Avançadas - で・に・へ
+    p3: [
+      { type: 'particle', question: 'Complete: がっこう___ べんきょうします (Estudo na escola)', word: 'で', options: ['で', 'に', 'へ', 'から'], correct: 0, explanation: 'で marca o local onde a ação acontece' },
+      { type: 'particle', question: 'Complete: とうきょう___ いきます (Vou para Tóquio)', word: 'へ', options: ['で', 'に', 'へ', 'から'], correct: 2, explanation: 'へ indica direção ou destino' },
+      { type: 'particle', question: 'Complete: 9じ___ おきます (Acordo às 9)', word: 'に', options: ['で', 'に', 'へ', 'から'], correct: 1, explanation: 'に marca tempo específico' },
+      { type: 'particle', question: 'Complete: えき___ でます (Saio da estação)', word: 'から', options: ['で', 'に', 'へ', 'から'], correct: 3, explanation: 'から indica ponto de partida' },
+      { type: 'particle', question: 'Qual partícula usar para "no trem"?', word: 'で', options: ['で', 'に', 'へ', 'から'], correct: 0, explanation: 'で marca o meio de transporte' },
+      { type: 'particle', question: 'Complete: ともだち___ あいます (Encontro com amigo)', word: 'に', options: ['で', 'に', 'へ', 'から'], correct: 1, explanation: 'に marca a pessoa com quem você encontra' },
+      { type: 'context', question: 'Complete: レストラン___ たべます (Como no restaurante)', word: 'で', options: ['で', 'に', 'へ', 'から'], correct: 0, explanation: 'Use で para o local da ação' }
+    ],
+
+    // Partículas Avançadas - と・から・まで
+    p4: [
+      { type: 'particle', question: 'Complete: ともだち___ いきます (Vou com amigo)', word: 'と', options: ['と', 'から', 'まで', 'で'], correct: 0, explanation: 'と marca companhia ("com")' },
+      { type: 'particle', question: 'Complete: 9じ___ 5じ___ べんきょうします (Estudo das 9 às 5)', word: 'から...まで', options: ['と...で', 'から...まで', 'に...へ', 'で...と'], correct: 1, explanation: 'から...まで indica período de tempo' },
+      { type: 'particle', question: 'Complete: せんせい___ ききました (Perguntei ao professor)', word: 'に', options: ['と', 'から', 'まで', 'に'], correct: 3, explanation: 'に marca a pessoa a quem você pergunta' },
+      { type: 'particle', question: 'Complete: ブラジル___ きました (Vim do Brasil)', word: 'から', options: ['と', 'から', 'まで', 'に'], correct: 1, explanation: 'から indica origem' },
+      { type: 'particle', question: 'Qual partícula usar para "até a estação"?', word: 'まで', options: ['と', 'から', 'まで', 'に'], correct: 2, explanation: 'まで marca o ponto final' },
+      { type: 'particle', question: 'Complete: りんご___ バナナ___ たべます (Como maçã e banana)', word: 'と', options: ['と', 'から', 'まで', 'に'], correct: 0, explanation: 'と conecta itens em uma lista' },
+      { type: 'context', question: 'Complete: 9じ___ 10じ___ ねます (Durmo das 9 às 10)', word: 'から...まで', options: ['と...で', 'から...まで', 'に...へ', 'で...と'], correct: 1, explanation: 'Use から...まで para intervalos de tempo' }
+    ],
+
+    // Verbos Básicos - です・います
+    vb1: [
+      { type: 'vocab', question: 'Como se diz "ser/estar" (formal)?', word: 'です', romaji: 'desu', options: ['です', 'います', 'あります', 'ます'], correct: 0, explanation: 'です (desu) é a forma formal de "ser" ou "estar"' },
+      { type: 'vocab', question: 'Qual é "existir" (para pessoas/animais)?', word: 'います', romaji: 'imasu', options: ['です', 'います', 'あります', 'ます'], correct: 1, explanation: 'います (imasu) indica existência de pessoas ou animais' },
+      { type: 'vocab', question: '"Existir" (para objetos) é:', word: 'あります', romaji: 'arimasu', options: ['です', 'います', 'あります', 'ます'], correct: 2, explanation: 'あります (arimasu) indica existência de objetos ou coisas' },
+      { type: 'context', question: 'Complete: わたし___ ブラジルじんです (Eu sou brasileiro)', word: 'は', options: ['は', 'が', 'を', 'です'], correct: 0, explanation: 'Frases com です usam は para marcar o tópico' },
+      { type: 'context', question: 'Complete: ねこ___ います (Tem um gato)', word: 'が', options: ['は', 'が', 'を', 'です'], correct: 1, explanation: 'Frases de existência usam が para o sujeito' },
+      { type: 'context', question: 'Complete: ほん___ あります (Tem um livro)', word: 'が', options: ['は', 'が', 'を', 'です'], correct: 1, explanation: 'Objetos usam あります com が' },
+      { type: 'context', question: 'Qual verbo usar para "Uma pessoa está aqui"?', word: 'います', options: ['です', 'います', 'あります', 'ます'], correct: 1, explanation: 'Pessoas usam います (imasu)' }
+    ],
   };
 
   const ranks = [
@@ -568,69 +771,82 @@ const App = () => {
     }
   }, [userProfile, units]);
 
-  // Firebase auth state listener
+  // Firebase auth state listener - apenas para restaurar sessões
   useEffect(() => {
+    console.log('🔄 [App] Configurando listener de autenticação...');
+
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        // User is signed in
-        const statsResult = await getUserStats(user.uid);
-        const userData = statsResult.success ? statsResult.stats : {};
+      console.log('👤 [App] onAuthStateChanged chamado, user:', user ? user.uid : 'null');
+      console.log('🔐 [App] isAuthenticated atual:', isAuthenticated);
 
-        const userProfile = {
-          name: user.displayName || 'Aventureiro',
-          email: user.email || '',
-          level: (userData as any)?.level || 1,
-          xp: (userData as any)?.xp || 0,
-          xpToNextLevel: 100,
-          rank: 'Ferro',
-          hearts: 5,
-          maxHearts: 5,
-          streak: 1,
-          totalXP: (userData as any)?.xp || 0,
-          gemsCollected: 0,
-          lastLoginDate: new Date().toDateString(),
-          completedLessons: []
-        };
+      if (user && !isAuthenticated) {
+        console.log('✅ [App] Usuário logado, mas app não sabe - restaurando sessão...');
 
-        setUserProfile(userProfile);
+        // Simplesmente marcar como autenticado sem buscar dados por enquanto
+        console.log('👤 [App] Definindo autenticação básica...');
         setIsAuthenticated(true);
-      } else {
-        // User is signed out
+
+        // Tentar buscar dados depois
+        try {
+          console.log('📊 [App] Tentando buscar dados do usuário...');
+          const statsResult = await getUserStats(user.uid);
+          console.log('📊 [App] Resultado getUserStats:', statsResult);
+
+          if (statsResult.success) {
+            const userData = statsResult.stats;
+            const updatedProfile = {
+              ...userProfile,
+              name: (userData as any)?.name || user.displayName || 'Aventureiro',
+              level: (userData as any)?.level || 1,
+              xp: (userData as any)?.xp || 0,
+              totalXP: (userData as any)?.totalXP || 0,
+            };
+            setUserProfile(updatedProfile);
+            console.log('✅ [App] Perfil atualizado com dados do Firestore');
+          }
+        } catch (error) {
+          console.error('❌ [App] Erro ao buscar dados, mantendo perfil básico:', error);
+        }
+
+        console.log('✅ [App] Sessão restaurada!');
+      } else if (!user && isAuthenticated) {
+        console.log('🚪 [App] Usuário deslogado, limpando estado...');
         setIsAuthenticated(false);
-        setUserProfile({
-          name: 'Aventureiro',
-          email: '',
-          level: 1,
-          xp: 0,
-          xpToNextLevel: 100,
-          rank: 'Ferro',
-          hearts: 5,
-          maxHearts: 5,
-          streak: 0,
-          totalXP: 0,
-          gemsCollected: 0,
-          lastLoginDate: new Date().toDateString(),
-          completedLessons: []
-        });
+      } else if (user && isAuthenticated) {
+        console.log('ℹ️ [App] Usuário já está logado e app já sabe');
+      } else {
+        console.log('ℹ️ [App] Nenhum usuário logado');
       }
     });
 
-    return () => unsubscribe();
-  }, []);
+    return unsubscribe;
+  }, [isAuthenticated]);
 
   const handleLogin = async () => {
-    if (!loginData.email || !loginData.password) {
-      alert('Por favor, preencha todos os campos');
+    setAuthError('');
+    setLoginLoading(true);
+
+    const email = loginData.email.trim().toLowerCase();
+    const password = loginData.password.trim();
+
+    if (!email || !password) {
+      setAuthError('Por favor, preencha email e senha');
+      playSound('wrong');
+      setLoginLoading(false);
       return;
     }
 
     try {
-      const result = await loginUser(loginData.email, loginData.password);
+      const result = await loginUser(email, password);
 
       if (result.success && result.user) {
-        // Carregar dados adicionais do usuário do Firestore
-        const statsResult = await getUserStats(result.user.id);
-        const userData = statsResult.success ? statsResult.stats : {};
+        let userData: any = {};
+        try {
+          const statsResult = await getUserStats(result.user.id);
+          userData = statsResult.success ? statsResult.stats : {};
+        } catch (statsError) {
+          console.warn('Não foi possível carregar estatísticas do usuário:', statsError);
+        }
 
         const userProfile = {
           name: result.user.name || 'Aventureiro',
@@ -642,7 +858,7 @@ const App = () => {
           hearts: 5,
           maxHearts: 5,
           streak: 1,
-          totalXP: (userData as any)?.xp || 0,
+          totalXP: (userData as any)?.totalXP || (userData as any)?.xp || 0,
           gemsCollected: 0,
           lastLoginDate: new Date().toDateString(),
           completedLessons: []
@@ -650,43 +866,61 @@ const App = () => {
 
         setUserProfile(userProfile);
         setIsAuthenticated(true);
+        localStorage.setItem('isAuthenticated', 'true');
+        localStorage.setItem('userProfile', JSON.stringify(userProfile));
+        setLoginData({ email: '', password: '' });
         playSound('correct');
       } else {
-        alert(result.error || 'Erro ao fazer login');
+        setAuthError(result.error || 'Email ou senha incorretos');
         playSound('wrong');
       }
     } catch (error) {
-      console.error('Erro no login:', error);
-      alert('Erro ao fazer login. Tente novamente.');
+      console.error('Erro inesperado no login:', error);
+      setAuthError('Erro de conexão. Verifique sua internet e tente novamente.');
       playSound('wrong');
+    } finally {
+      setLoginLoading(false);
     }
   };
 
   const handleRegister = async () => {
-    if (!registerData.name || !registerData.email || !registerData.password || !registerData.confirmPassword) {
-      alert('Por favor, preencha todos os campos');
-      return;
-    }
+    setAuthError('');
+    setRegisterLoading(true);
 
-    if (registerData.password.length < 6) {
-      alert('A senha deve ter pelo menos 6 caracteres');
-      return;
-    }
+    const name = registerData.name.trim();
+    const email = registerData.email.trim().toLowerCase();
+    const password = registerData.password.trim();
+    const confirmPassword = registerData.confirmPassword.trim();
 
-    if (registerData.password !== registerData.confirmPassword) {
-      setPasswordMatchError(true);
-      alert('As senhas não conferem!');
+    if (!name || !email || !password || !confirmPassword) {
+      setAuthError('Por favor, preencha todos os campos');
       playSound('wrong');
+      setRegisterLoading(false);
+      return;
+    }
+
+    if (password.length < 6) {
+      setAuthError('A senha deve ter pelo menos 6 caracteres');
+      playSound('wrong');
+      setRegisterLoading(false);
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setPasswordMatchError(true);
+      setAuthError('As senhas não conferem');
+      playSound('wrong');
+      setRegisterLoading(false);
       return;
     }
 
     try {
-      const result = await registerUser(registerData.email, registerData.password, registerData.name);
+      const result = await registerUser(email, password, name);
 
       if (result.success) {
         const newUser = {
-          name: registerData.name,
-          email: registerData.email,
+          name,
+          email,
           level: 1,
           xp: 0,
           xpToNextLevel: 100,
@@ -702,23 +936,32 @@ const App = () => {
 
         setUserProfile(newUser);
         setIsAuthenticated(true);
+        localStorage.setItem('isAuthenticated', 'true');
+        localStorage.setItem('userProfile', JSON.stringify(newUser));
         setPasswordMatchError(false);
+        setRegisterData({ name: '', email: '', password: '', confirmPassword: '' });
         playSound('levelup');
-        alert(`Bem-vindo, ${newUser.name}! 🎉`);
       } else {
-        alert(result.error);
+        setAuthError(result.error || 'Erro no registro. Tente novamente.');
         playSound('wrong');
       }
     } catch (error) {
-      console.error('Erro no registro:', error);
-      alert('Erro ao criar conta. Tente novamente.');
+      console.error('Erro inesperado no registro:', error);
+      setAuthError('Erro de conexão. Verifique sua internet e tente novamente.');
       playSound('wrong');
+    } finally {
+      setRegisterLoading(false);
     }
   };
 
   const handleLogout = async () => {
     try {
       const result = await logoutUser();
+      if (window.localStorage) {
+        localStorage.removeItem('isAuthenticated');
+        localStorage.removeItem('userProfile');
+      }
+
       if (result.success) {
         setIsAuthenticated(false);
         setCurrentScreen('map');
@@ -1266,43 +1509,23 @@ IMPORTANTE:
 
                 <button
                   onClick={handleLogin}
-                  className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold py-3 rounded-xl transition-all transform hover:scale-105 mb-4"
+                  disabled={loginLoading}
+                  className={`w-full font-bold py-3 rounded-xl transition-all transform mb-4 ${loginLoading ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white hover:scale-105'}`}
                 >
-                  Entrar
+                  {loginLoading ? 'Entrando...' : 'Entrar'}
                 </button>
 
-                <button
-                  onClick={() => {
-                    const guestUser = {
-                      name: 'Visitante',
-                      email: 'visitante@linguaquest.com',
-                      password: '',
-                      level: 1,
-                      xp: 0,
-                      xpToNextLevel: 100,
-                      rank: 'Ferro',
-                      hearts: 5,
-                      maxHearts: 5,
-                      streak: 1,
-                      totalXP: 0,
-                      gemsCollected: 0,
-                      lastLoginDate: new Date().toDateString(),
-                      completedLessons: []
-                    };
-                    setUserProfile(guestUser);
-                    setIsAuthenticated(true);
-                    playSound('correct');
-                  }}
-                  className="w-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-3 rounded-xl transition-all mb-4"
-                >
-                  🎮 Começar sem Login
-                </button>
+                {authError && (
+                  <p className="text-sm text-red-600 mb-4">{authError}</p>
+                )}
 
                 <p className="text-center text-gray-600">
                   Não tem uma conta?{' '}
                   <button
                     onClick={() => {
                       setAuthScreen('register');
+                      setAuthError('');
+                      setPasswordMatchError(false);
                       playSound('click');
                     }}
                     className="text-purple-600 font-semibold hover:underline"
@@ -1429,6 +1652,8 @@ IMPORTANTE:
                   <button
                     onClick={() => {
                       setAuthScreen('login');
+                      setAuthError('');
+                      setPasswordMatchError(false);
                       playSound('click');
                     }}
                     className="text-purple-600 font-semibold hover:underline"
